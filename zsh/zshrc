@@ -1,6 +1,12 @@
 # Functions
 fastfetch-run() {
-    $ZSH/RandomFastfetchIcon.sh
+    local script_path="${ZSH}/RandomFastfetchIcon.sh"
+
+    if [[ -x "$script_path" ]]; then
+        "$script_path"
+    else
+        logger -t "fastfetch-run" -p user.err "Ошибка: Файл скрипта не найден или не является исполняемым по пути: $script_path"
+    fi
 }
 
 clear-on-empty() {
@@ -22,13 +28,13 @@ clear-and-show-fastfetch() {
 
 # Export
 export ZSH="$HOME/.oh-my-zsh"
-export EDITOR="code" # For yazi (Shift+O, Enter, O or RMB)
+export EDITOR="code"
 
 ZSH_THEME="agnosterzakpink"
 
 plugins=(
     git
-    archlinux
+    # archlinux
     zsh-autosuggestions
     zsh-syntax-highlighting
 )
@@ -47,23 +53,17 @@ SAVEHIST=10000
 setopt appendhistory
 
 # Set-up icons for files/directories in terminal using lsd
-alias ls='lsd'
-alias l='ls -l'
-alias la='ls -a'
-alias lla='ls -la'
-alias lt='ls --tree'
+# alias ls='lsd'
+# alias l='ls -l'
+# alias la='ls -a'
+# alias lla='ls -la'
+# alias lt='ls --tree'
 
 # Simpler
-alias cd="z"
-
-# Develop
-# alias androidstart="hyprctl dispatch exec scrcpy"
-
-# Fun
-alias rain="$HOME/.config/hypr/UserScripts/RainbowText.sh"
+# alias cd="z"
 
 # Binds
-source <(fzf --zsh) # Set-up FZF key bindings (CTRL R for fuzzy history finder)
+# source <(fzf --zsh) # Set-up FZF key bindings (CTRL R for fuzzy history finder)
 
 zle -N clear-and-show-fastfetch
 bindkey '^N' clear-and-show-fastfetch

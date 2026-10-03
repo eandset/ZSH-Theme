@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PLUGIN_DIR="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins"
+PLUGIN_DIR="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/"
 
 echo "📥 Installing plugins for ZSH..."
 
