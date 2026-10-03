@@ -1,0 +1,72 @@
+# Functions
+fastfetch-run() {
+    $ZSH/RandomFastfetchIcon.sh
+}
+
+clear-on-empty() {
+    if [[ -z "$BUFFER" ]]; then
+        zle clear-screen
+    else
+        zle accept-line
+    fi
+}
+
+clear-and-show-fastfetch() {
+    if [[ -z "$BUFFER" ]]; then
+        fastfetch-run
+        zle accept-line
+    else
+        zle accept-line
+    fi
+}
+
+# Export
+export ZSH="$HOME/.oh-my-zsh"
+export EDITOR="code" # For yazi (Shift+O, Enter, O or RMB)
+
+ZSH_THEME="agnosterzakpink"
+
+plugins=(
+    git
+    archlinux
+    zsh-autosuggestions
+    zsh-syntax-highlighting
+)
+
+eval "$(zoxide init zsh)"
+
+source $ZSH/oh-my-zsh.sh
+
+# Start
+fastfetch-run
+
+# History
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt appendhistory
+
+# Set-up icons for files/directories in terminal using lsd
+alias ls='lsd'
+alias l='ls -l'
+alias la='ls -a'
+alias lla='ls -la'
+alias lt='ls --tree'
+
+# Simpler
+alias cd="z"
+
+# Develop
+# alias androidstart="hyprctl dispatch exec scrcpy"
+
+# Fun
+alias rain="$HOME/.config/hypr/UserScripts/RainbowText.sh"
+
+# Binds
+source <(fzf --zsh) # Set-up FZF key bindings (CTRL R for fuzzy history finder)
+
+zle -N clear-and-show-fastfetch
+bindkey '^N' clear-and-show-fastfetch
+
+zle -N clear-on-empty
+bindkey '^M' clear-on-empty
