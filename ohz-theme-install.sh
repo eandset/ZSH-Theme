@@ -6,18 +6,21 @@ NC='\033[0m'
 THEME_DIR="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/"
 
 copy-theme() {
-    mkdir -p "$THEME_DIR"
+    mkdir -p "$THEME_DIR" && echo "[INFO] Created theme directory"
     
-    cp zsh/themes/*1"$THEME_DIR" 2>/dev/null
-    cp zsh/zshrc ~/.zshrc
+    cp zsh/themes/* "$THEME_DIR" && echo "[INFO] Copped themes"
+    cp zsh/zshrc ~/.zshrc && echo "[INFO] Copped zshrc file"
 }
 
 if [ -d "$HOME/.oh-my-zsh" ]; then
-    echo -e "${RED}Please install Oh My Zsh.${NC}"
-else
+
+    ./check-space.sh || exit 1
+    
     echo "🎨 Copying themes and settings..."
 
     copy-theme
 
     echo "✨ Theme installed!."
+else
+    echo -e "${RED}Please install Oh My Zsh.${NC}"
 fi

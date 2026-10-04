@@ -11,60 +11,42 @@
 ### Segment drawing
 # A few utility functions to make it easy and re-usable to draw segmented prompts
 
-CURRENT_BG='NONE'
-
-# Characters
-SEGMENT_SEPARATOR="\ue0b0"
-PLUSMINUS="\u00b1"
-BRANCH="\ue0a0"
-DETACHED="\u27a6"
-CROSS="\u2718"
-LIGHTNING="\u26a1"
-GEAR="\u2699"
-
-ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=#f52742'
-
-ZSH_HIGHLIGHT_STYLES[command]='fg=#f788ba'
-ZSH_HIGHLIGHT_STYLES[alias]='fg=#e888f7'
-ZSH_HIGHLIGHT_STYLES[function]='fg=#aa78fa'
-ZSH_HIGHLIGHT_STYLES[builtin]='fg=#f788ba'
-
-# Пути и строки - цвет 218 (светло-розовый)
-ZSH_HIGHLIGHT_STYLES[path]='fg=218,underline'
-ZSH_HIGHLIGHT_STYLES[single-quoted-argument]='fg=218'
-ZSH_HIGHLIGHT_STYLES[double-quoted-argument]='fg=218'
-
-# Опции (флаги, например -l) - цвет 205 (средний розовый)
-ZSH_HIGHLIGHT_STYLES[reserved-word]='fg=205'
-ZSH_HIGHLIGHT_STYLES[precommand]='fg=205'
+source "${ZSH_CUSTOM:-$ZSH/custom}/themes/pink-colors.zsh"
 
 # ==============================================
-# НАСТРОЙКА ЦВЕТОВ (Pastel Pink)
+# ПРИМЕНЕНИЕ ЦВЕТОВ
 # ==============================================
 
-# Мы используем формат RGB: 38;2;R;G;B
-# #f788ba (Rose)  -> 247;136;186
-# #e888f7 (Lilac) -> 232;136;247
+ZSH_HIGHLIGHT_STYLES[unknown-token]="fg=${C_UNKNOWN_TOKEN_FG}"
 
-# di = директории (Rose Bold)
-# ex = исполняемые файлы (Lilac Bold)
-# ln = ссылки (Lilac)
-# ow = папки с правами записи для всех (подсвечиваем Rose)
-# mi/or = битые ссылки (Красный, чтобы было видно ошибку)
+ZSH_HIGHLIGHT_STYLES[command]="fg=${C_COMMAND_FG}"
+ZSH_HIGHLIGHT_STYLES[alias]="fg=${C_ALIAS_FG}"
+ZSH_HIGHLIGHT_STYLES[function]="fg=${C_FUNCTION_FG}"
+ZSH_HIGHLIGHT_STYLES[builtin]="fg=${C_BUILTIN_FG}"
 
-export LS_COLORS="di=1;38;2;247;136;186:ex=1;38;2;232;136;247:ln=38;2;232;136;247:so=38;2;247;136;186:pi=38;2;247;136;186:bd=38;2;247;136;186:cd=38;2;247;136;186:su=1;38;2;232;136;247:sg=1;38;2;232;136;247:tw=38;2;247;136;186:ow=38;2;247;136;186:st=38;2;247;136;186:mi=1;31:or=1;31"
+# Пути и строки - цвет 218
+ZSH_HIGHLIGHT_STYLES[path]="fg=${C_PATH_FG},underline"
+ZSH_HIGHLIGHT_STYLES[single-quoted-argument]="fg=${C_SINGLE_QUOTED_FG}"
+ZSH_HIGHLIGHT_STYLES[double-quoted-argument]="fg=${C_DOUBLE_QUOTED_FG}"
+
+# Опции (флаги, например -l) - цвет 205
+ZSH_HIGHLIGHT_STYLES[reserved-word]="fg=${C_RESERVED_WORD_FG}"
+ZSH_HIGHLIGHT_STYLES[precommand]="fg=${C_PRECOMMAND_FG}"
+
+# ==============================================
+# НАСТРОЙКА ЦВЕТОВ
+# ==============================================
+
+export LS_COLORS="di=${LS_COLOR_DIR}:ex=${LS_COLOR_EXEC}:ln=${LS_COLOR_LINK}:so=${LS_COLOR_SOCKET}:pi=${LS_COLOR_FIFO}:bd=${LS_COLOR_BLOCKDEV}:cd=${LS_COLOR_CHARDEV}:su=${LS_COLOR_SETUID}:sg=${LS_COLOR_SETGID}:tw=${LS_COLOR_STICKY_OTHER_WRITABLE}:ow=${LS_COLOR_OTHER_WRITABLE}:st=${LS_COLOR_STICKY}:mi=${LS_COLOR_MISSING}:or=${LS_COLOR_ORPHAN}"
 
 # Применяем эти цвета к меню выбора (TAB)
-# ma (выбранный элемент):
-# Фон = #f788ba (Rose) -> 48;2;247;136;186
-# Текст = Черный (для контраста на светлом фоне) -> 38;5;0
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}" "ma=48;2;247;136;186;38;5;0"
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}" "ma=${LS_COLOR_SELECTED}"
 
 # 3. Настройка заголовков групп (например, "-- Commands --")
-zstyle ':completion:*:*:*:*:descriptions' format '%F{213}-- %d --%f'
-zstyle ':completion:*:*:*:*:corrections' format '%F{213}!- %d (errors: %e) -!%f'
-zstyle ':completion:*:messages' format ' %F{197} -- %d --%f'
-zstyle ':completion:*:warnings' format ' %F{197} -- No matches found --%f'
+zstyle ':completion:*:*:*:*:descriptions' format "%F{${C_COMPLETION_DESCRIPTIONS_FG}}-- %d --%f"
+zstyle ':completion:*:*:*:*:corrections' format "%F{${C_COMPLETION_CORRECTIONS_FG}}!- %d (errors: %e) -!%f"
+zstyle ':completion:*:messages' format " %F{${C_COMPLETION_MESSAGES_FG}} -- %d --%f"
+zstyle ':completion:*:warnings' format " %F{${C_COMPLETION_WARNINGS_FG}} -- No matches found --%f"
 
 # 4. Группировка результатов (сначала файлы, потом папки и т.д.)
 zstyle ':completion:*' group-name ''
@@ -102,11 +84,11 @@ prompt_end() {
 # Context: user@hostname (who am I and where am I)
 prompt_context() {
   if [[ -n "$SSH_CLIENT" ]]; then
-    # SSH session - более яркий розовый
-    prompt_segment 213 white "%{$fg_bold[white]%(!.%{%F{white}%}.)%}$USER@%m%{$fg_no_bold[white]%}"
+    # SSH session
+    prompt_segment $C_CONTEXT_SSH_BG $C_CONTEXT_SSH_FG "%{$fg_bold[white]%(!.%{%F{white}%}.)%}$USER@%m%{$fg_no_bold[white]%}"
   else
-    # Локальная сессия - светло-розовый фон с темным текстом
-    prompt_segment 218 161 "%{$fg_bold[161]%(!.%{%F{161]%}.)%}@$USER%{$fg_no_bold[161]%}"
+    # Локальная сессия
+    prompt_segment $C_CONTEXT_LOCAL_BG $C_CONTEXT_LOCAL_FG "%{$fg_bold[161]%(!.%{%F{161]%}.)%}@$USER%{$fg_no_bold[161]%}"
   fi
 }
 
@@ -151,11 +133,11 @@ prompt_battery() {
     b=$(battery_pct_remaining)
     if [[ $(ioreg -rc AppleSmartBattery | grep -c '^.*"ExternalConnected"\ =\ No') -eq 1 ]] ; then
       if [ $b -gt 50 ] ; then
-        prompt_segment 211 white
+        prompt_segment $C_BATTERY_HIGH_BG $C_BATTERY_FG
       elif [ $b -gt 20 ] ; then
-        prompt_segment 217 white
+        prompt_segment $C_BATTERY_MID_BG $C_BATTERY_FG
       else
-        prompt_segment 197 white
+        prompt_segment $C_BATTERY_LOW_BG $C_BATTERY_FG
       fi
       echo -n "%{$fg_bold[white]%}$HEART$(battery_pct_remaining)%%%{$fg_no_bold[white]%}"
     fi
@@ -190,11 +172,11 @@ prompt_battery() {
     b=$(battery_pct_remaining)
     if [[ $(acpi 2&>/dev/null | grep -c '^Battery.*Discharging') -gt 0 ]] ; then
       if [ $b -gt 40 ] ; then
-        prompt_segment 211 white
+        prompt_segment $C_BATTERY_HIGH_BG $C_BATTERY_FG
       elif [ $b -gt 20 ] ; then
-        prompt_segment 217 white
+        prompt_segment $C_BATTERY_MID_BG $C_BATTERY_FG
       else
-        prompt_segment 197 white
+        prompt_segment $C_BATTERY_LOW_BG $C_BATTERY_FG
       fi
       echo -n "%{$fg_bold[white]%}$HEART$(battery_pct_remaining)%%%{$fg_no_bold[white]%}"
     fi
@@ -223,12 +205,12 @@ prompt_git() {
     ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git rev-parse --short HEAD 2> /dev/null)"
     if [[ -n $dirty ]]; then
       clean=''
-      bgclr='217'  # Светло-розовый для dirty
-      fgclr='89'   # Темно-розовый текст
+      bgclr=$C_GIT_DIRTY_BG
+      fgclr=$C_GIT_DIRTY_FG
     else
       clean=' ✔'
-      bgclr='211'  # Розовый для clean
-      fgclr='white'
+      bgclr=$C_GIT_CLEAN_BG
+      fgclr=$C_GIT_CLEAN_FG
     fi
 
     local upstream=$(git rev-parse --symbolic-full-name --abbrev-ref @{upstream} 2> /dev/null)
@@ -245,8 +227,8 @@ prompt_git() {
     local number_modified=$(\grep -c "^.M" <<< "${git_status}")
     if [[ $number_modified -gt 0 ]]; then
       modified=" $number_modified●"
-      bgclr='197'  # Яркий розовый для модификаций
-      fgclr='white'
+      bgclr=$C_GIT_MODIFIED_BG
+      fgclr=$C_GIT_MODIFIED_FG
     fi
 
     local number_added_modified=$(\grep -c "^M" <<< "${git_status}")
@@ -260,8 +242,8 @@ prompt_git() {
     local number_deleted=$(\grep -c "^.D" <<< "${git_status}")
     if [[ $number_deleted -gt 0 ]]; then
       deleted=" $number_deleted‒"
-      bgclr='161'  # Темно-розовый для удалений
-      fgclr='white'
+      bgclr=$C_GIT_DELETED_BG
+      fgclr=$C_GIT_DELETED_FG
     fi
 
     local number_added_deleted=$(\grep -c "^D" <<< "${git_status}")
@@ -277,8 +259,8 @@ prompt_git() {
     local number_of_stashes="$(git stash list -n1 2> /dev/null | wc -l)"
     if [[ $number_of_stashes -gt 0 ]]; then
       stashed=" ${number_of_stashes##*(  )}⚙"
-      bgclr='205'  # Средний розовый для stash
-      fgclr='white'
+      bgclr=$C_GIT_STASH_BG
+      fgclr=$C_GIT_STASH_FG
     fi
 
     if [[ $number_added -gt 0 || $number_added_modified -gt 0 || $number_added_deleted -gt 0 ]]; then ready_commit=' ⚑'; fi
@@ -295,13 +277,13 @@ prompt_git() {
     has_diverged=false
     if [[ $commits_ahead -gt 0 && $commits_behind -gt 0 ]]; then has_diverged=true; fi
     if [[ $has_diverged == false && $commits_ahead -gt 0 ]]; then
-      if [[ $bgclr == '197' || $bgclr == '205' || $bgclr == '161' ]] then
+      if [[ $bgclr == $C_GIT_MODIFIED_BG || $bgclr == $C_GIT_STASH_BG || $bgclr == $C_GIT_DELETED_BG ]] then
         to_push=" $fg_bold[white]↑$commits_ahead$fg_bold[$fgclr]"
       else
-        to_push=" $fg_bold[89]↑$commits_ahead$fg_bold[$fgclr]"
+        to_push=" $fg_bold[${C_GIT_PUSH_CLEAN_FG}]↑$commits_ahead$fg_bold[$fgclr]"
       fi
     fi
-    if [[ $has_diverged == false && $commits_behind -gt 0 ]]; then to_pull=" $fg_bold[213]↓$commits_behind$fg_bold[$fgclr]"; fi
+    if [[ $has_diverged == false && $commits_behind -gt 0 ]]; then to_pull=" $fg_bold[${C_GIT_PULL_FG}]↓$commits_behind$fg_bold[$fgclr]"; fi
 
     if [[ -e "${repo_path}/BISECT_LOG" ]]; then
       mode=" <B>"
@@ -323,15 +305,15 @@ prompt_hg() {
     if $(hg prompt >/dev/null 2>&1); then
       if [[ $(hg prompt "{status|unknown}") = "?" ]]; then
         # if files are not added
-        prompt_segment 197 white
+        prompt_segment $C_HG_UNTRACKED_BG $C_HG_UNTRACKED_FG
         st='±'
       elif [[ -n $(hg prompt "{status|modified}") ]]; then
         # if any modification
-        prompt_segment 217 89
+        prompt_segment $C_HG_MODIFIED_BG $C_HG_MODIFIED_FG
         st='±'
       else
         # if working copy is clean
-        prompt_segment 211 white
+        prompt_segment $C_HG_CLEAN_BG $C_HG_CLEAN_FG
       fi
       print -n $(hg prompt "☿ {rev}@{branch}") $st
     else
@@ -339,13 +321,13 @@ prompt_hg() {
       rev=$(hg id -n 2>/dev/null | sed 's/[^-0-9]//g')
       branch=$(hg id -b 2>/dev/null)
       if `hg st | grep -q "^\?"`; then
-        prompt_segment 197 white
+        prompt_segment $C_HG_UNTRACKED_BG $C_HG_UNTRACKED_FG
         st='±'
       elif `hg st | grep -q "^[MA]"`; then
-        prompt_segment 217 89
+        prompt_segment $C_HG_MODIFIED_BG $C_HG_MODIFIED_FG
         st='±'
       else
-        prompt_segment 211 white
+        prompt_segment $C_HG_CLEAN_BG $C_HG_CLEAN_FG
       fi
       print -n "☿ $rev@$branch" $st
     fi
@@ -354,19 +336,19 @@ prompt_hg() {
 
 #Dir: current working directory
 prompt_dir() {
-  prompt_segment 213 white "%{$fg_bold[white]%}%~%{$fg_no_bold[white]%}"
+  prompt_segment $C_DIR_BG $C_DIR_FG "%{$fg_bold[white]%}%~%{$fg_no_bold[white]%}"
 }
 
 # Virtualenv: current working virtualenv
 prompt_virtualenv() {
   local virtualenv_path="$VIRTUAL_ENV"
   if [[ -n $virtualenv_path && -n $VIRTUAL_ENV_DISABLE_PROMPT ]]; then
-    prompt_segment 219 89 "(`basename $virtualenv_path`)"
+    prompt_segment $C_VIRTUALENV_BG $C_VIRTUALENV_FG "(`basename $virtualenv_path`)"
   fi
 }
 
 prompt_time() {
-  prompt_segment 205 white "%{$fg_bold[white]%}%D{%a %e %b - %H:%M}%{$fg_no_bold[white]%}"
+  prompt_segment $C_TIME_BG $C_TIME_FG "%{$fg_bold[white]%}%D{%a %e %b - %H:%M}%{$fg_no_bold[white]%}"
 }
 
 # Status:
@@ -376,11 +358,11 @@ prompt_time() {
 prompt_status() {
   local symbols
   symbols=()
-  [[ $RETVAL -ne 0 ]] && symbols+="%{%F{197}%}$CROSS"
-  [[ $UID -eq 0 ]] && symbols+="%{%F{213}%}$LIGHTNING"
-  [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{219}%}$GEAR"
+  [[ $RETVAL -ne 0 ]] && symbols+="%{%F{${C_STATUS_ERROR_FG}}%}$CROSS"
+  [[ $UID -eq 0 ]] && symbols+="%{%F{${C_STATUS_ROOT_FG}}%}$LIGHTNING"
+  [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{${C_STATUS_JOBS_FG}}%}$GEAR"
 
-  [[ -n "$symbols" ]] && prompt_segment 89 default "$symbols"
+  [[ -n "$symbols" ]] && prompt_segment $C_STATUS_BG default "$symbols"
 }
 
 ## Main prompt
