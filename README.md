@@ -2,6 +2,10 @@
 
 Моя ZSH (oh my zsh) тема для терминала - kitty, konsole и другие.
 
+## Скрины
+> Пока что есть 2 вариации
+<img width="1920" height="1046" alt="image" src="https://github.com/user-attachments/assets/337f5aac-b34b-41f4-a294-d7c39f1aa146" />
+
 ## Инструкция по установке
 1. Склонировать репозиторий `git clone https://github.com/eandset/ZSH-Theme.git` или же скачать архив и распаковать
 2. Перейти в директорию `cd ZSH-Theme`
@@ -46,6 +50,13 @@ plugins=(
 # source <(fzf --zsh) # Set-up FZF key bindings (CTRL R for fuzzy history finder)
 
 ...
+```
+4. Сменить цветовую схему в файле темы `agnosterzakpink.zsh-theme` (хранится по пути `${ZSH}/custom/themes/eandset`):
+```
+14    source "${ZSH_CUSTOM:-$ZSH/custom}/themes/eandset/pink-colors.zsh"
+```
+```
+14    source "${ZSH_CUSTOM:-$ZSH/custom}/themes/eandset/persic-colors.zsh"
 ```
 
 ## Шаблон устаноки для Konsole
