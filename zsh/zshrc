@@ -2,10 +2,12 @@
 fastfetch-run() {
     local script_path="${ZSH}/RandomFastfetchIcon.sh"
 
-    if [[ -x "$script_path" ]]; then
-        "$script_path"
-    else
-        logger -t "fastfetch-run" -p user.err "Ошибка: Файл скрипта не найден или не является исполняемым по пути: $script_path"
+    if [[ "$TERM_PROGRAM" != "konsole" && -z "$KONSOLE_VERSION" ]]; then
+        if [[ -x "$script_path" ]]; then
+            "$script_path"
+        else
+            logger -t "fastfetch-run" -p user.err "Ошибка: Файл скрипта не найден или не является исполняемым по пути: $script_path"
+        fi
     fi
 }
 
@@ -30,7 +32,7 @@ clear-and-show-fastfetch() {
 export ZSH="$HOME/.oh-my-zsh"
 export EDITOR="code"
 
-ZSH_THEME="agnosterzakpink"
+ZSH_THEME="eandset/agnosterzakpink"
 
 plugins=(
     git

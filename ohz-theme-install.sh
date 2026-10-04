@@ -3,7 +3,7 @@
 RED='\033[0;31m'
 NC='\033[0m'
 
-THEME_DIR="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/"
+THEME_DIR="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/eandset"
 
 copy-theme() {
     mkdir -p "$THEME_DIR" && echo "[INFO] Created theme directory"
