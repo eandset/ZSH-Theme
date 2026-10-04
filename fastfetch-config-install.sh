@@ -1,3 +1,5 @@
+#!/bin/bash
+
 OHZ_PATH="$HOME/.oh-my-zsh/"
 
 cp zsh/RandomFastfetchIcon.sh "${OHZ_PATH}"
