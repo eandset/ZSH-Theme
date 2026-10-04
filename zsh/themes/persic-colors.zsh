@@ -9,6 +9,17 @@
 # #e5ca8f — Песочно-золотистый (RGB: 229;202;143)
 # #d98880 — Приглушённый терракотовый / акцентный (RGB: 217;136;128)
 
+CURRENT_BG='NONE'
+
+# Characters
+SEGMENT_SEPARATOR="\ue0b0"
+PLUSMINUS="\u00b1"
+BRANCH="\ue0a0"
+DETACHED="\u27a6"
+CROSS="\u2718"
+LIGHTNING="\u26a1"
+GEAR="\u2699"
+
 # --- Базовые цвета темы ---
 C_UNKNOWN_TOKEN_FG=#e06c75
 
