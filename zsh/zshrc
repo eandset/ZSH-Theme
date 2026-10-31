@@ -41,7 +41,7 @@ plugins=(
     zsh-syntax-highlighting
 )
 
-eval "$(zoxide init zsh)"
+# eval "$(zoxide init zsh)"
 
 source $ZSH/oh-my-zsh.sh
 
